@@ -12,3 +12,12 @@
 ### Dynamo DB
 - create a dynamo db instance in cli
 - cli: create an entry into the instance
+
+### EC2
+
+### Lambda
+
+### S3
+
+### CloudWatch
+
