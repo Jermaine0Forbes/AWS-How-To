@@ -4,14 +4,89 @@
 -[how to check the version of your cli][ver-cli]
 
 ## Dynamo DB
--[how to list out tables][dyn-list]
+- [how to list out tables][dyn-list]
 - [how to create dynamo table][dyn-create]
+- [how to insert item in dynamodb][dyn-ins]
+- [how to list items in a dynamodb table][dyn-list-items]
+- [how to delete a dynamodb table][dyn-delete]
 
+[dyn-delete]:#how-to-delete-a-dynamodb-table
+[dyn-list-items]:#how-to-list-items-in-a-dynamodb-table
+[dyn-ins]:#how-to-insert-item-in-dynamodb
 [dyn-create]:#how-to-create-dynamo-table
 [dyn-list]:#how-to-list-out-tables
 [ver-cli]:#how-to-check-the-version-of-your-cli
 [setup-cli]:#how-to-setup-a-cli-on-your-computer
 [home]:#cli-how-to
+
+
+### how to delete a dynamodb table
+
+<details>
+<summary>
+View Content
+</summary>
+
+:link: **Reference**
+
+- [Deleting the Amazon DynamoDB tables](https://docs.aws.amazon.com/solutions/latest/research-service-workbench-on-aws/deleting-the-amazon-dynamodb-tables.html)
+
+```
+aws dynamodb delete-table -–table-name <tablename>
+```
+
+</details>
+[go back :house:][home]
+
+
+### how to list items in a dynamodb table
+
+<details>
+<summary>
+View Content
+</summary>
+
+
+:link: **Reference**
+
+- [aws cli](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/scan.html#examples)
+
+In windows
+```
+aws dynamodb scan ^
+    --table-name Users
+```
+
+</details>
+[go back :house:][home]
+
+### how to insert item in dynamo db
+
+<details>
+<summary>
+View Content
+</summary>
+
+:link: **Reference**
+
+- [aws cli](https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html#examples)
+
+Creating anything in aws cli sucks so it's much better to just do it through the command console,
+sdk, or cdk
+
+In windows
+```
+aws dynamodb put-item ^
+    --table-name Users  ^
+    --item ^
+        "{\"Name\": {\"S\": \"John Doe\"}, \"Id\": {\"N\": \"1\"}}"
+    --return-consumed-capacity TOTAL ^
+    --return-item-collection-metrics SIZE
+```
+
+</details>
+[go back :house:][home]
+
 
 ### how to create dynamo table
 

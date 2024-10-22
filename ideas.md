@@ -1,3 +1,11 @@
+## Beginner Tasks
+- create a dynamo db table with sdk and cdk
+- create a ec2  with sdk and cdk
+- create an s3 bucket  with sdk and cdk
+- create a lamba with sdk and cdk
+- create a dynamo item with sdk and cdk
+
+## Moderate Tasks
 - create an app that can upload files to s3
 - create an app that will need to utilize sqs and lambda for a workload
 - deploy an app to elastic beanstalk
@@ -7,17 +15,5 @@
 - create a load balancer and test it
 
 
-## Databases
 
-### Dynamo DB
-- create a dynamo db instance in cli
-- cli: create an entry into the instance
-
-### EC2
-
-### Lambda
-
-### S3
-
-### CloudWatch
 
