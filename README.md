@@ -15,7 +15,6 @@ A guide on how to do the fundamental actions within AWS management console
 ## S3
 - [s3 permissions and bucket policies][s3-perm]
 
-[home]:#aws-how-to
 [s3-perm]:#s3-permissions-and-bucket-policies
 [ssh-ec2]:#how-to-ssh-into-your-ec2
 [create-ec2]:#how-create-an-ec2
@@ -88,6 +87,77 @@ has the `my-example-bucket`
 
 </details>
 
+[go back :house:][home]
+
+
+
+### s3 permissions and bucket policies
+
+<details>
+<summary>
+View Content
+</summary>
+
+1. go to iam
+2. click users
+3. create a new user
+    - add name
+    - provide access to the management console
+    - make him an iam user
+    - then create the user
+4. go to s3 and create a bucket
+5. after creating the bucket, click inside of it and go to properties
+6. copy the bucket arn number
+7. paste the arn inside this code block at the `Resource` property that
+has the `my-example-bucket`
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::my-example-bucket/*"
+            ]
+        }
+    ]
+}
+```
+8. copy the example code above and go to newly created user account
+9. In the permissions tab, click add permissions, and create inline policy
+10. In the json tab, paste in the example code and click review policy
+11. click create policy
+12. login as the new user and go to s3 
+(you should be able to see the buckets because the permissions allow it )
+13. go to newly created bucket, and choose the properties tab
+(verify that you don't have permissions to do anything)
+14. go to the object tab and upload an image
+
+</details>
 [go back :house:][home]
 
 
