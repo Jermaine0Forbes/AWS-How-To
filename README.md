@@ -14,11 +14,51 @@ A guide on how to do the fundamental actions within AWS management console
 
 ## S3
 - [s3 permissions and bucket policies][s3-perm]
+- [configure replication and lifecycle][s3-rep]
 
 [home]:#aws-how-to
 [s3-perm]:#s3-permissions-and-bucket-policies
 [ssh-ec2]:#how-to-ssh-into-your-ec2
 [create-ec2]:#how-create-an-ec2
+[s3-rep]:#configure-replication-and-lifecycle
+
+### configure replication and lifecycle
+
+<details>
+<summary>
+View Content
+</summary>
+
+- first we need to setup  two s3 buckets in order to configure same-region replication
+- go to s3 and create a source bucket in us-east-1
+    - enable bucket versioning
+- create another bucket(destination)
+    - enable bucket versioning
+- go to iam in order create a role that would be used for replication
+    1. choose the option custom trust policy
+    2. paste this code in the editor 
+```
+{
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Principal":{
+            "Service":"s3.amazonaws.com"
+         },
+         "Action":"sts:AssumeRole"
+      }
+   ]
+}
+```  
+  3. click next 2x, and name the role SRR-S3, then create the role
+- select the role
+
+
+</details>
+
+[go back :house:][home]
+
 
 ### s3 permissions and bucket policies
 
@@ -38,7 +78,7 @@ View Content
 5. after creating the bucket, click inside of it and go to properties
 6. copy the bucket arn number
 7. paste the arn inside this code block at the `Resource` property that
-has the `my-example-bucket`
+has the `my-example-bucket`. Make sure you keep the `/*` after the bucket name
 
 ```
 {
@@ -80,11 +120,48 @@ has the `my-example-bucket`
 9. In the permissions tab, click add permissions, and create inline policy
 10. In the json tab, paste in the example code and click review policy
 11. click create policy
-12. login as the new user and go to s3 
+12. login as the new user and go to s3 (in a separate browser)
 (you should be able to see the buckets because the permissions allow it )
 13. go to newly created bucket, and choose the properties tab
 (verify that you don't have permissions to do anything)
 14. go to the object tab and upload an image
+15. now try to download the file that you created, then attempt to delete
+(verify that you cannot delete the file because of permissions)
+16. In your admin account. go to your current buckets permmissions tab and edit the bucket policy to paste this content inside( obviously, change the user arn and bucket name) 
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowDeleteObject",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::123456789012:user/my-example-user"
+            },
+            "Action": [
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::my-example-bucket/*"
+            ]
+        }
+    ]
+}
+```
+17. after you saved it, go back to the other user account and attempt to delete the bucket object again (it should work now)
+18. in the admin account, go back to iam and edit the user's permission policies. in the json editor  paste this bracket of code at the bottom (obviously changing the names)
+```
+    {
+        "Sid": "DenyDeleteObject",
+        "Effect": "Deny",
+        "Action": "s3:DeleteObject",
+        "Resource": [
+            "arn:aws:s3:::my-example-bucket/*"
+        ]
+    }
+```
+19. go back to created user account, and try to upload another image. then try to delete that object (of course you could not delete it because you added the deny rule)
+
 
 </details>
 
