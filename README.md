@@ -15,12 +15,96 @@ A guide on how to do the fundamental actions within AWS management console
 ## S3
 - [s3 permissions and bucket policies][s3-perm]
 - [configure replication and lifecycle][s3-rep]
+- [s3 event notifications][s3-evt-not]
+- [s3 presigned urls][s3-pre-url]
 
 [home]:#aws-how-to
 [s3-perm]:#s3-permissions-and-bucket-policies
 [ssh-ec2]:#how-to-ssh-into-your-ec2
 [create-ec2]:#how-create-an-ec2
 [s3-rep]:#configure-replication-and-lifecycle
+[s3-evt-not]:#s3-event-notifications
+[s3-pre-url]:#s3-presigned-urls
+
+### s3 presigned urls
+
+<details>
+<summary>
+View Content
+</summary>
+
+- create a bucket
+- upload a file
+- try to acccess the file
+- open a new tab to go cloudshell
+- type in this command to create a pre-signed url
+
+```
+
+```
+
+</details>
+
+[go back :house:][home]
+
+
+### s3 event notifications
+
+<details>
+<summary>
+View Content
+</summary>
+
+- create a bucket
+- go to sns and create a new topic
+    - click create a subscription
+    - choose the protocol as email
+    - in the endpoint field, add in the email address you want to send the notification to
+    - if email address is new, go to your email account and confirm the 
+    subscription that you will get from aws
+    -
+- go back to your bucket and go to properties
+    - scroll down and click create event notification
+- create the name, and choose, all object create events, option 
+    - scroll down, and choose sns topic as the destination
+    - pick the topic you just recently created
+    - attempt to save ( you will not because you have not configured an sns policy to your bucket)
+- open a new tab to go back to your sns topic
+- choose access policy and click edit (top right)
+- click on the dropdown of access policy and enter in this code
+    - obviously change the arn numbers for the bucket and sns, and the sourceAccount as well
+    - save the changes
+
+```
+{
+ "Version": "2012-10-17",
+ "Id": "AllowS3Publish",
+ "Statement": [
+  {
+   "Sid": "S3EventNotification",
+   "Effect": "Allow",
+   "Principal": {
+     "Service": "s3.amazonaws.com"  
+   },
+   "Action": [
+    "SNS:Publish"
+   ],
+   "Resource": "arn:aws:sns:us-east-2:387990400161:myEmail",
+   "Condition": {
+      "ArnLike": { "aws:SourceArn": "arn:aws:s3:::evt-notification-21125" },
+      "StringEquals": { "aws:SourceAccount": "387990400161" }
+   }
+  }
+ ]
+}
+```
+- go back to your bucket event notification page and attempt to save again (you should be able to save now)
+- go to your bucket and upload a file
+- after uploading a file, go to your email account and verify that sns sent an email verifying that an upload has been made
+
+</details>
+
+[go back :house:][home]
 
 ### configure replication and lifecycle
 
