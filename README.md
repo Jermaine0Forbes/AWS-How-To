@@ -17,6 +17,10 @@ A guide on how to do the fundamental actions within AWS management console
 - [configure replication and lifecycle][s3-rep]
 - [s3 event notifications][s3-evt-not]
 - [s3 presigned urls][s3-pre-url]
+- [create an amazon s3 static website][s3-stat-site]
+
+## Route 53
+- [register domain with route 53][53-register]
 
 [home]:#aws-how-to
 [s3-perm]:#s3-permissions-and-bucket-policies
@@ -25,6 +29,92 @@ A guide on how to do the fundamental actions within AWS management console
 [s3-rep]:#configure-replication-and-lifecycle
 [s3-evt-not]:#s3-event-notifications
 [s3-pre-url]:#s3-presigned-urls
+[s3-static-site]:#create-an-amazon-s3-static-website
+[53-register]:#register-domain-with-route-53
+
+### register domain with route 53
+
+<details>
+<summary>
+View Content
+</summary>
+
+- go to route 53
+- click register domain
+- check availability for name (jcf-labs-aws.link)
+- decide if you want to pay for that domain
+- proceed to checkout, turn off auto-renewal
+- fill out information on the contact form, and there you have it.
+-
+
+```
+
+```
+
+</details>
+
+[go back :house:][home]
+
+### create an amazon s3 static website
+
+<details>
+<summary>
+View Content
+</summary>
+
+- create a bucket 
+- enable the bucket to allow the public to view objects
+- create an html file and insert the content below
+
+
+```html
+<html>
+<head>
+<style>
+body {
+  background-color: #33342D;
+}
+h1 { color: white; }
+h1 {
+ text-align:center
+}
+</style>
+</head>
+<body>
+
+<h1>Congratulations, you've launched a static website on Amazon S3</h1>
+<img src="20220402_133051.jpg" />
+<img src="20220416_130114_09.jpg" />
+</body>
+</html>
+```
+- upload a couple of images into the bucket and add the name of the images
+into the html file
+- upload the html file
+-  go to > permissions > bucket policy > edit
+- then add this policy to be able to access the objects
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::nameOfBucket/*"
+        }
+    ]
+}
+```
+- now go to the html file, and click on the object url (you should now be able to see the file)
+
+
+</details>
+
+[go back :house:][home]
+
 
 ### s3 presigned urls
 
@@ -34,14 +124,22 @@ View Content
 </summary>
 
 - create a bucket
+    - name it and save it
 - upload a file
-- try to acccess the file
+    - go back to your created bucket
+    - click upload and upload a file
+- click on the name of your uploaded file
+    - click on the object url
+    - you should receive an xml permission denied message
 - open a new tab to go cloudshell
+    - cloud shell allows you to run commands in your aws environment
 - type in this command to create a pre-signed url
-
+    
 ```
-
+aws s3 presign s3://nameofBucket/nameOfFile
 ```
+- running this command will generate a presign url that will give you permission to view the file for a limited time.
+- copy the url, and paste it in a new tab to be able to view the file
 
 </details>
 
